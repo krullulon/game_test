@@ -136,23 +136,27 @@ def draw_instructions(surface, font, instructions_text):
 
 def draw_end_screen(surface, font, game_state):
     """
-    Renders the win/lose screen with a "Play again" button and the "A" button.
-    Returns the rectangle for the "Play again" button.
+    Renders the win/lose screen with:
+      - A "Play again" button + "A" circle
+      - An "Exit" button + "B" circle
+    Returns (play_button_rect, exit_button_rect)
     """
-    from settings import WIDTH, HEIGHT
     surface.fill((0, 0, 0))
+
+    # Display "You win!" or "You lose!"
     message = "You win!" if game_state == "win" else "You lose!"
     text_surface = font.render(message, True, (255, 255, 255))
     text_rect = text_surface.get_rect(center=(WIDTH // 2, HEIGHT // 2))
     surface.blit(text_surface, text_rect)
 
+    # ----- "Play again" button -----
     button_text = "Play again"
     button_surface = font.render(button_text, True, (0, 0, 0))
     button_rect = button_surface.get_rect(center=(WIDTH // 2, text_rect.bottom + 60))
     pygame.draw.rect(surface, (200, 200, 200), button_rect.inflate(20, 10))
     surface.blit(button_surface, button_rect)
 
-    # Draw the "A" button as a green circle with the letter "A"
+    # "A" button circle
     a_button_radius = 20
     a_button_x = button_rect.right + a_button_radius + 25
     a_button_y = button_rect.centery
@@ -161,7 +165,23 @@ def draw_end_screen(surface, font, game_state):
     a_text_rect = a_text_surface.get_rect(center=(a_button_x, a_button_y))
     surface.blit(a_text_surface, a_text_rect)
 
-    return button_rect
+    # ----- "Exit" button -----
+    exit_text = "Exit"
+    exit_surface = font.render(exit_text, True, (0, 0, 0))
+    exit_rect = exit_surface.get_rect(center=(WIDTH // 2, button_rect.bottom + 60))
+    pygame.draw.rect(surface, (200, 200, 200), exit_rect.inflate(20, 10))
+    surface.blit(exit_surface, exit_rect)
+
+    # "B" button circle
+    b_button_radius = 20
+    b_button_x = exit_rect.right + b_button_radius + 25
+    b_button_y = exit_rect.centery
+    pygame.draw.circle(surface, (200, 0, 0), (b_button_x, b_button_y), b_button_radius)
+    b_text_surface = font.render("B", True, (255, 255, 255))
+    b_text_rect = b_text_surface.get_rect(center=(b_button_x, b_button_y))
+    surface.blit(b_text_surface, b_text_rect)
+
+    return button_rect, exit_rect
 
 
 def draw_gameplay(surface, obstacles, green_rect, barriers_disabled, switch_rect, switch_triggered,

@@ -324,14 +324,25 @@ class Game:
                 sprite_flip=sprite_flip,
                 get_cell_barriers_func=get_cell_barriers
             )
-        else:
-            # Win or lose state: use a smaller font for the end screen.
-            small_font = pygame.font.Font(None, 40)
-            button_rect = draw_end_screen(self.screen, small_font, self.game_state)
-            # Check for mouse click on the "Play again" button.
+        elif self.game_state == GAME_STATE_WIN or self.game_state == GAME_STATE_LOSE:
+            # Or if you just have else: as your win/lose block, that’s fine
+            play_button_rect, exit_button_rect = draw_end_screen(self.screen, self.font, self.game_state)
+
+            # Check for mouse click on "Play again" or "Exit"
             if pygame.mouse.get_pressed()[0]:
-                if button_rect.collidepoint(pygame.mouse.get_pos()):
+                mouse_pos = pygame.mouse.get_pos()
+                if play_button_rect.collidepoint(mouse_pos):
                     self.reset(start_state=GAME_STATE_PLAYING)
-            # Also check if joystick "A" button (button 0) is pressed to restart.
-            if self.joystick and self.joystick.get_button(0):
-                self.reset(start_state=GAME_STATE_PLAYING)
+                elif exit_button_rect.collidepoint(mouse_pos):
+                    pygame.quit()
+                    sys.exit()  # Or handle a different "exit" logic
+
+            # Check joystick input
+            if self.joystick:
+                # Button 0 is typically "A" on many controllers
+                if self.joystick.get_button(0):
+                    self.reset(start_state=GAME_STATE_PLAYING)
+                # Button 1 is often "B" (this can vary by controller)
+                elif self.joystick.get_button(1):
+                    pygame.quit()
+                    sys.exit()
