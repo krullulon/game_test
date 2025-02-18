@@ -325,8 +325,12 @@ class Game:
                 get_cell_barriers_func=get_cell_barriers
             )
         elif self.game_state == GAME_STATE_WIN or self.game_state == GAME_STATE_LOSE:
+            
+            # Use a smaller font for the win/lose screen (50% size, e.g., 40)
+            small_font = pygame.font.Font(None, 40)
+            
             # Or if you just have else: as your win/lose block, that’s fine
-            play_button_rect, exit_button_rect = draw_end_screen(self.screen, self.font, self.game_state)
+            play_button_rect, exit_button_rect = draw_end_screen(self.screen, small_font, self.game_state)
 
             # Check for mouse click on "Play again" or "Exit"
             if pygame.mouse.get_pressed()[0]:
